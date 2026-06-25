@@ -117,7 +117,7 @@ export default function CreditNoteTenderDrawer({
               <div className="flex gap-2">
                 <input value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="Mobile number"
                   className="flex-1 px-3 py-2 rounded-lg border border-slate-200 text-sm font-bold" />
-                <button onClick={lookup} disabled={loading} className="rounded-xl bg-emerald-600 text-white px-4 py-2 text-sm font-bold hover:bg-emerald-700 disabled:opacity-50">
+                <button onClick={lookup} disabled={loading} className="rounded-xl bg-rose-600 text-white px-4 py-2 text-sm font-bold hover:bg-rose-700 disabled:opacity-50">
                   {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Find"}
                 </button>
               </div>
@@ -134,7 +134,7 @@ export default function CreditNoteTenderDrawer({
                     <div className="text-[11px] text-slate-400">Balance: {formatINR(n.availableAmount)} · {n.status}</div>
                   </div>
                   <button onClick={() => sendOtp(n)} disabled={loading}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50">
+                    className="text-xs px-3 py-1.5 rounded-lg bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-50">
                     Send OTP
                   </button>
                 </div>
@@ -163,15 +163,15 @@ export default function CreditNoteTenderDrawer({
           )}
 
           {step === "APPLY" && selected && (
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-3 space-y-2">
-              <div className="text-sm font-bold text-emerald-800">OTP verified — {selected.creditNoteId}</div>
+            <div className="rounded-2xl border border-rose-200 bg-rose-50 p-3 space-y-2">
+              <div className="text-sm font-bold text-rose-800">OTP verified — {selected.creditNoteId}</div>
               <div className="flex items-center justify-between text-xs">
-                <label className="font-bold text-emerald-700">Amount to apply</label>
+                <label className="font-bold text-rose-700">Amount to apply</label>
                 <input type="number" min={0} max={Math.min(selected.availableAmount, total)} value={applyAmount}
                   onChange={(e) => setApplyAmount(Math.max(0, Math.min(Number(e.target.value) || 0, selected.availableAmount, total)))}
-                  className="w-24 px-2 py-1 rounded border border-emerald-200 text-right text-xs" />
+                  className="w-24 px-2 py-1 rounded border border-rose-200 text-right text-xs" />
               </div>
-              <button onClick={apply} disabled={applyAmount <= 0} className="w-full rounded-xl bg-emerald-600 text-white py-2.5 text-sm font-black hover:bg-emerald-700 disabled:opacity-50">
+              <button onClick={apply} disabled={applyAmount <= 0} className="w-full rounded-xl bg-rose-600 text-white py-2.5 text-sm font-black hover:bg-rose-700 disabled:opacity-50">
                 Apply to Bill
               </button>
             </div>

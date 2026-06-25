@@ -2,6 +2,7 @@ import { Link, useNavigate, useRouterState, type LinkProps } from "@/lib/routerC
 import { useEffect, type ReactNode } from "react";
 import logo from "@/assets/hometown_logo.png";
 import { useAuth, ROLE_LABELS, type Role } from "@/lib/auth";
+import { ROLE_THEME } from "@/theme/posTheme";
 import {
   LayoutDashboard, ScanBarcode, Package, Users, Receipt, Store, BarChart3, RefreshCcw, LogOut,
   Wallet, ShieldCheck, MonitorSmartphone, Building2, Percent, CreditCard,
@@ -20,8 +21,11 @@ const nav: NavItem[] = [
   { to: "/payments", label: "Payments", icon: <CreditCard className="h-4 w-4" />, group: "Counter", roles: ["cashier", "manager", "admin"] },
   { to: "/customers", label: "Customers", icon: <Users className="h-4 w-4" />, group: "Counter", roles: ["cashier", "manager"] },
   { to: "/manager/dashboard", label: "Store Dashboard", icon: <Store className="h-4 w-4" />, group: "Store", roles: ["manager"] },
+  { to: "/manager/sales-history", label: "Sales History", icon: <BarChart3 className="h-4 w-4" />, group: "Store", roles: ["manager"] },
   { to: "/inventory", label: "Inventory", icon: <Package className="h-4 w-4" />, group: "Store", roles: ["manager", "admin"] },
   { to: "/admin/dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" />, group: "HQ", roles: ["admin"] },
+  { to: "/admin/dsr-analysis", label: "DSR Analysis", icon: <BarChart3 className="h-4 w-4" />, group: "HQ", roles: ["admin"] },
+  { to: "/admin/dsr-storewise", label: "DSR Storewise", icon: <Building2 className="h-4 w-4" />, group: "HQ", roles: ["admin"] },
   { to: "/stores", label: "Stores", icon: <Building2 className="h-4 w-4" />, group: "HQ", roles: ["admin"] },
   { to: "/catalogue", label: "Catalogue", icon: <Package className="h-4 w-4" />, group: "HQ", roles: ["admin", "manager"] },
   { to: "/offers", label: "Discounts & Offers", icon: <Percent className="h-4 w-4" />, group: "HQ", roles: ["admin", "manager"] },
@@ -39,13 +43,13 @@ const nav: NavItem[] = [
 ];
 
 const MANAGER_ORDER = [
-  "Store Dashboard", "Orders", "Invoices", "Payments", "Customers",
+  "Store Dashboard", "Sales History", "Orders", "Invoices", "Payments", "Customers",
   "Categories", "Catalogue", "Inventory", "Discounts & Offers",
   "Coupons", "POS Hardware", "Reports", "My Capabilities",
 ];
 
 const ADMIN_ORDER = [
-  "Dashboard", "Stores", "Orders", "Invoices", "Payments", "Accounts",
+  "Dashboard", "DSR Analysis", "DSR Storewise", "Stores", "Orders", "Invoices", "Payments", "Accounts",
   "Inventory", "Catalogue", "Discounts & Offers", "Coupons", "Categories",
   "Online Sales", "POS Hardware", "Reports", "SAP / ERP Sync",
   "Active Sessions", "Settings", "My Capabilities",
@@ -86,6 +90,8 @@ export function AppShell({
     ? []
     : Array.from(new Set(nav.filter((n) => n.roles.includes(user.role)).map((n) => n.group)));
 
+  const roleTheme = ROLE_THEME[user.role.toUpperCase() as keyof typeof ROLE_THEME];
+
   const renderLink = (n: NavItem) => {
     const active = path === n.to;
     return (
@@ -94,9 +100,10 @@ export function AppShell({
         to={n.to}
         className={`flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm transition-colors ${
           active
-            ? "bg-primary text-primary-foreground shadow-sm"
+            ? "text-white shadow-sm"
             : "text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         }`}
+        style={active ? { background: roleTheme.primary } : undefined}
       >
         {n.icon}
         {n.label}

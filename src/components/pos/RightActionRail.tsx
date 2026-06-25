@@ -22,12 +22,12 @@ const ACTIONS: { key: PosAction; label: string; icon: any }[] = [
 // cashier never loses their place mid-checkout by clicking one of these.
 export default function RightActionRail({ onOpen }: { onOpen: (action: PosAction) => void }) {
   return (
-    <aside className="hidden xl:flex flex-col w-[88px] shrink-0 bg-emerald-900 rounded-3xl py-3 px-1.5 gap-1.5 overflow-y-auto">
+    <aside className="hidden xl:flex flex-col w-[88px] shrink-0 bg-blue-900 rounded-3xl py-3 px-1.5 gap-1.5 overflow-y-auto">
       {ACTIONS.map(({ key, label, icon: Icon }) => (
         <button
           key={key}
           onClick={() => onOpen(key)}
-          className="flex flex-col items-center gap-1 rounded-2xl py-2.5 px-1 text-emerald-50 hover:bg-emerald-800 transition-colors"
+          className="flex flex-col items-center gap-1 rounded-2xl py-2.5 px-1 text-blue-50 hover:bg-blue-800 transition-colors"
         >
           <Icon className="h-4 w-4" />
           <span className="text-[9px] font-bold leading-tight text-center">{label}</span>

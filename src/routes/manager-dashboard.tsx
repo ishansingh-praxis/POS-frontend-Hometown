@@ -29,6 +29,9 @@ import {
   getManagerDashboardApi,
   resolveSessionExceptionApi,
 } from "@/services/managerDashboardService";
+import { getDsrSummaryApi, getDsrReplenishmentSignalApi } from "@/services/dsrService";
+import { getDsrStoreByCodeApi, type DsrStorewiseSummary } from "@/services/dsrStorewiseService";
+import { COLORS, ROLE_THEME } from "@/theme/posTheme";
 
 const formatINR = (value: number) =>
   new Intl.NumberFormat("en-IN", {
@@ -60,6 +63,9 @@ export default function ManagerDashboard() {
   const [businessDate, setBusinessDate] = useState(today());
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
   const [dashboard, setDashboard] = useState<any>(null);
+  const [dsrSummary, setDsrSummary] = useState<any>(null);
+  const [dsrReplenishment, setDsrReplenishment] = useState<any[]>([]);
+  const [dsrStorewise, setDsrStorewise] = useState<DsrStorewiseSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState("");
@@ -69,9 +75,17 @@ export default function ManagerDashboard() {
       setLoading(true);
       setError("");
 
-      const response: any = await getManagerDashboardApi({ businessDate });
+      const [response, dsr, repl, storewise]: any = await Promise.all([
+        getManagerDashboardApi({ businessDate }),
+        getDsrSummaryApi({ storeCode: user?.store, fromDate: "2026-06-01", toDate: "2026-06-22" }).catch(() => null),
+        getDsrReplenishmentSignalApi({ storeCode: user?.store, limit: 5 }).catch(() => []),
+        user?.store ? getDsrStoreByCodeApi(user.store).catch(() => null) : Promise.resolve(null),
+      ]);
 
       setDashboard(response?.data || response);
+      setDsrSummary(dsr);
+      setDsrReplenishment(repl || []);
+      setDsrStorewise(storewise);
     } catch (err: any) {
       setError(err.message || "Unable to load manager dashboard");
     } finally {
@@ -190,7 +204,7 @@ export default function ManagerDashboard() {
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => navigate("/my-capabilities")}
-            className="text-xs px-3 py-2 rounded-xl border border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 inline-flex items-center gap-1.5 font-bold"
+            className="text-xs px-3 py-2 rounded-xl border border-[#E6EAFE] bg-[#F3F5FF] text-[#4B49AC] hover:bg-[#E6EAFE] inline-flex items-center gap-1.5 font-bold"
           >
             <ShieldCheck className="h-3.5 w-3.5" />
             My Capabilities
@@ -207,7 +221,7 @@ export default function ManagerDashboard() {
       }
     >
       <div className="space-y-6">
-        <section className="rounded-3xl bg-gradient-to-r from-slate-950 via-orange-700 to-amber-500 text-white p-6 shadow-lg">
+        <section className="rounded-3xl text-white p-6 shadow-lg" style={{ background: ROLE_THEME.MANAGER.header }}>
           <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold mb-3">
@@ -275,6 +289,9 @@ export default function ManagerDashboard() {
                 blockers={blockers}
                 closeStoreDay={closeStoreDay}
                 actionLoading={actionLoading}
+                dsrSummary={dsrSummary}
+                dsrReplenishment={dsrReplenishment}
+                dsrStorewise={dsrStorewise}
               />
             )}
 
@@ -363,9 +380,10 @@ function DashboardTabs({
               onClick={() => setActiveTab(tab.key)}
               className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-black border ${
                 active
-                  ? "bg-orange-600 text-white border-orange-600"
-                  : "bg-white text-gray-700 border-gray-200 hover:bg-orange-50"
+                  ? "text-white border-transparent"
+                  : "bg-white text-gray-700 border-gray-200 hover:bg-[#F3F5FF]"
               }`}
+              style={active ? { background: COLORS.deepPurple } : undefined}
             >
               <Icon className="h-4 w-4" />
               {tab.label}
@@ -385,7 +403,11 @@ function OverviewTab({
   blockers,
   closeStoreDay,
   actionLoading,
+  dsrSummary,
+  dsrReplenishment,
+  dsrStorewise,
 }: any) {
+  const navigate = useNavigate();
   const sales = overview?.sales || {};
   const invoices = overview?.invoices || {};
   const payments = overview?.payments || {};
@@ -394,6 +416,92 @@ function OverviewTab({
 
   return (
     <div className="space-y-6">
+      {dsrSummary && (
+        <Panel title="DSR Store Insights (June 2026)" icon={<BarChart3 />}>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+            <KpiCard
+              label="Gross Sales"
+              value={formatINR(dsrSummary.grossSales)}
+              icon={<IndianRupee />}
+              tone="orange"
+            />
+            <KpiCard
+              label="Qty Sold"
+              value={formatNumber(dsrSummary.totalQty)}
+              icon={<ShoppingCart />}
+            />
+            <KpiCard
+              label="Unique Articles"
+              value={formatNumber(dsrSummary.articleCount)}
+              icon={<Boxes />}
+            />
+            <KpiCard
+              label="Top Customers"
+              value={formatNumber(dsrSummary.customerCount)}
+              icon={<Users />}
+            />
+          </div>
+          {dsrReplenishment.length > 0 && (
+            <div className="text-sm text-gray-700 mb-3">
+              <strong>Replenishment Alert:</strong> {dsrReplenishment.length} SKU(s) with high sales & low ATP
+            </div>
+          )}
+          <button
+            onClick={() => navigate("/manager/sales-history")}
+            className="rounded-xl text-white px-4 py-2 text-sm font-black hover:opacity-90 transition-colors"
+            style={{ background: COLORS.indigo }}
+          >
+            View Sales History
+          </button>
+        </Panel>
+      )}
+
+      {dsrStorewise && (
+        <Panel title="My Store — June DSR" icon={<BarChart3 />}>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <KpiCard
+              label="June Gross Sales"
+              value={formatINR(dsrStorewise.grossSales)}
+              icon={<IndianRupee />}
+              tone="orange"
+            />
+            <KpiCard label="Bills" value={formatNumber(dsrStorewise.bills)} icon={<FileText />} />
+            <KpiCard label="Customers" value={formatNumber(dsrStorewise.customers)} icon={<Users />} />
+            <KpiCard label="Qty Sold" value={formatNumber(dsrStorewise.qty)} icon={<ShoppingCart />} />
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-3 mt-4 text-xs">
+            <div className="rounded-2xl border border-gray-200 p-3">
+              <div className="font-black text-gray-700 mb-1.5">Top LOB</div>
+              {(dsrStorewise.lobBreakup || []).slice(0, 3).map((row: any, i: number) => (
+                <div key={i} className="flex justify-between text-gray-600 py-0.5">
+                  <span>{row.lob || "-"}</span>
+                  <span className="font-bold">{formatINR(row.grossSales)}</span>
+                </div>
+              ))}
+            </div>
+            <div className="rounded-2xl border border-gray-200 p-3">
+              <div className="font-black text-gray-700 mb-1.5">Top Category</div>
+              {(dsrStorewise.topCategories || []).slice(0, 3).map((row: any, i: number) => (
+                <div key={i} className="flex justify-between text-gray-600 py-0.5">
+                  <span>{row.category || "-"}</span>
+                  <span className="font-bold">{formatINR(row.grossSales)}</span>
+                </div>
+              ))}
+            </div>
+            <div className="rounded-2xl border border-gray-200 p-3">
+              <div className="font-black text-gray-700 mb-1.5">Top Articles</div>
+              {(dsrStorewise.topArticles || []).slice(0, 3).map((row: any, i: number) => (
+                <div key={i} className="flex justify-between text-gray-600 py-0.5">
+                  <span className="truncate">{row.articleDescription || row.sku || "-"}</span>
+                  <span className="font-bold">{formatINR(row.grossSales)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Panel>
+      )}
+
       <section className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
         <KpiCard
           label="Today Sales"
@@ -493,7 +601,8 @@ function OverviewTab({
             <button
               onClick={closeStoreDay}
               disabled={!canCloseStoreDay || actionLoading}
-              className="w-full rounded-2xl bg-orange-600 text-white py-3 font-black disabled:opacity-50"
+              className="w-full rounded-2xl text-white py-3 font-black disabled:opacity-50"
+              style={{ background: COLORS.teal }}
             >
               {actionLoading ? "Processing..." : "Close Store Day"}
             </button>
@@ -534,7 +643,7 @@ function CashiersTab({ sessions, performance }: any) {
       <Panel title="Cashier Live Sessions" icon={<UserRound />}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-orange-50 text-orange-900">
+            <thead className="bg-[#F3F5FF] text-[#4B49AC]">
               <tr>
                 <Th>Cashier</Th>
                 <Th>Status</Th>
@@ -599,7 +708,7 @@ function CashiersTab({ sessions, performance }: any) {
       <Panel title="Cashier Performance" icon={<BarChart3 />}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-orange-50 text-orange-900">
+            <thead className="bg-[#F3F5FF] text-[#4B49AC]">
               <tr>
                 <Th>Cashier</Th>
                 <Th>Invoices</Th>
@@ -823,7 +932,7 @@ function InventoryTab({
       <Panel title="Replenishment Suggestions from RDC / MDC" icon={<RefreshCcw />}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-orange-50 text-orange-900">
+            <thead className="bg-[#F3F5FF] text-[#4B49AC]">
               <tr>
                 <Th>Product</Th>
                 <Th>Store ATP</Th>
@@ -1011,7 +1120,8 @@ function ClosingTab({
           <button
             onClick={closeStoreDay}
             disabled={!canCloseStoreDay || actionLoading}
-            className="rounded-2xl bg-orange-600 text-white px-6 py-3 font-black disabled:opacity-50"
+            className="rounded-2xl text-white px-6 py-3 font-black disabled:opacity-50"
+            style={{ background: COLORS.teal }}
           >
             {actionLoading ? "Processing..." : "Close Store Day"}
           </button>
@@ -1058,7 +1168,7 @@ function ClosingTab({
       <Panel title="Closing Session Status" icon={<ClipboardCheck />}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-orange-50 text-orange-900">
+            <thead className="bg-[#F3F5FF] text-[#4B49AC]">
               <tr>
                 <Th>Cashier</Th>
                 <Th>Status</Th>
@@ -1100,18 +1210,15 @@ function KpiCard({
   label: string;
   value: string;
   icon: React.ReactNode;
-  tone?: "default" | "orange" | "green" | "red" | "amber";
+  tone?: "default" | "orange" | "green" | "red" | "amber" | "cyan" | "purple";
 }) {
-  const toneClass =
-    tone === "orange"
-      ? "bg-orange-50 text-orange-700"
-      : tone === "green"
-      ? "bg-emerald-50 text-emerald-700"
-      : tone === "red"
-      ? "bg-red-50 text-red-700"
-      : tone === "amber"
-      ? "bg-amber-50 text-amber-700"
-      : "bg-slate-50 text-slate-700";
+  const hex =
+    tone === "orange" || tone === "amber" ? COLORS.orange :
+    tone === "green" ? COLORS.teal :
+    tone === "red" ? COLORS.coral :
+    tone === "cyan" ? COLORS.cyan :
+    tone === "purple" ? COLORS.deepPurple :
+    COLORS.deepPurple;
 
   return (
     <div className="rounded-3xl bg-white border shadow-sm p-4">
@@ -1120,7 +1227,10 @@ function KpiCard({
           <div className="text-xs text-gray-500 font-semibold">{label}</div>
           <div className="mt-2 text-2xl font-black text-gray-950">{value}</div>
         </div>
-        <div className={`h-11 w-11 rounded-2xl grid place-items-center ${toneClass}`}>
+        <div
+          className="h-11 w-11 rounded-2xl grid place-items-center text-white"
+          style={{ background: hex }}
+        >
           {icon}
         </div>
       </div>
@@ -1267,7 +1377,7 @@ function SimpleAggTable({
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="bg-orange-50 text-orange-900">
+        <thead className="bg-[#F3F5FF] text-[#4B49AC]">
           <tr>
             {columns.map((c) => (
               <Th key={c[0]}>{c[1]}</Th>
@@ -1305,7 +1415,7 @@ function InventoryProductTable({ rows }: { rows: any[] }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="bg-orange-50 text-orange-900">
+        <thead className="bg-[#F3F5FF] text-[#4B49AC]">
           <tr>
             <Th>Product</Th>
             <Th>LOB</Th>
@@ -1350,7 +1460,7 @@ function CustomerTable({ rows }: { rows: any[] }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="bg-orange-50 text-orange-900">
+        <thead className="bg-[#F3F5FF] text-[#4B49AC]">
           <tr>
             <Th>Customer</Th>
             <Th>Phone</Th>

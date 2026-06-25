@@ -129,7 +129,7 @@ function Login() {
       <div className="flex items-center justify-center p-6 sm:p-10">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-8">
-            <img src={logo} alt="HomeTown" className="h-11 w-11 rounded-full ring-2 ring-primary/40" />
+            <img src={logo} alt="HomeTown" className="h-11 w-11 rounded-full ring-2 ring-[#1B3B6F]/40" />
             <div className="font-display text-xl">HomeTown POS</div>
           </div>
 
@@ -147,7 +147,7 @@ function Login() {
                   type="button"
                   onClick={() => selectRole(r)}
                   className={`flex flex-col items-center gap-1 py-2.5 px-1 rounded-lg text-[11px] font-medium leading-tight transition-all ${
-                    active ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-foreground"
+                    active ? "bg-card text-[#1B3B6F] shadow-sm" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -198,7 +198,7 @@ function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-lg bg-[#1B3B6F] text-white font-medium hover:bg-[#142d57] transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
             >
               Sign in as {ROLE_LABELS[role]}
               <ArrowRight className="h-4 w-4" />
@@ -228,7 +228,7 @@ function Login() {
                   type="button"
                   onClick={() => selectUser(u.email)}
                   className={`flex items-center justify-between text-xs rounded-md px-2.5 py-1.5 text-left hover:bg-muted ${
-                    selectedEmail === u.email ? "bg-card text-primary ring-1 ring-ring/40" : ""
+                    selectedEmail === u.email ? "bg-card text-[#1B3B6F] ring-1 ring-[#1B3B6F]/40" : ""
                   }`}
                 >
                   <span className="font-medium text-foreground">{u.serial}. {u.name}</span>

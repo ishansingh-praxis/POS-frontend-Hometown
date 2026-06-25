@@ -5,6 +5,8 @@ import PageAccess from "./routes/access";
 import PageAccounts from "./routes/accounts";
 import PageAdmin from "./routes/admin";
 import PageAdminDashboard from "./routes/admin-dashboard";
+import AdminDsrAnalysisPage from "./routes/admin/dsr-analysis";
+import AdminDsrStorewisePage from "./routes/admin/dsr-storewise";
 import PageAudit from "./routes/audit";
 import PageCashierDashboard from "./routes/cashier-dashboard";
 import PageCashierShift from "./routes/cashier-shift";
@@ -20,6 +22,7 @@ import PageInvoices from "./routes/invoices";
 import PageLogin from "./routes/login";
 import PageManager from "./routes/manager";
 import PageManagerCategories from "./routes/manager-categories";
+import ManagerSalesHistoryPage from "./routes/manager/sales-history";
 import PageManagerDashboard from "./routes/manager-dashboard";
 import PageMasterData from "./routes/master-data";
 import PageMyCapabilities from "./routes/my-capabilities";
@@ -50,7 +53,10 @@ function App() {
           <Route path="/accounts" element={<PageAccounts />} />
           <Route path="/admin" element={<PageAdmin />} />
           <Route path="/admin/dashboard" element={<PageAdminDashboard />} />
+          <Route path="/admin/dsr-analysis" element={<AdminDsrAnalysisPage />} />
+          <Route path="/admin/dsr-storewise" element={<AdminDsrStorewisePage />} />
           <Route path="/manager/dashboard" element={<PageManagerDashboard />} />
+          <Route path="/manager/sales-history" element={<ManagerSalesHistoryPage />} />
           <Route path="/manager/categories" element={<PageManagerCategories />} />
           <Route path="/cashier/dashboard" element={<PageCashierDashboard />} />
           <Route path="/cashier/billing" element={<PagePos />} />

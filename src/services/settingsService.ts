@@ -1,4 +1,5 @@
 import { apiFetch } from "./api";
+import type { PagedItems } from "./cashierService";
 
 export type ApiSetting = {
   _id: string;
@@ -9,7 +10,7 @@ export type ApiSetting = {
 };
 
 export const getAllSettingsApi = () =>
-  apiFetch<ApiSetting[]>("/settings?limit=500");
+  apiFetch<PagedItems<ApiSetting>>("/settings?limit=500").then((res) => res.items);
 
 export const saveSettingsApi = (records: { settingKey: string; settingValue: any; module: string }[]) =>
   apiFetch<ApiSetting[]>("/settings/bulk", {

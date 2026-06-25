@@ -9,6 +9,7 @@ import {
 import StartShiftModal from "@/components/cashier/StartShiftModal";
 import CloseShiftModal from "@/components/cashier/CloseShiftModal";
 import { toast } from "sonner";
+import { COLORS, ROLE_THEME } from "@/theme/posTheme";
 import {
   Maximize2,
   ShoppingCart,
@@ -79,12 +80,15 @@ export default function CashierDashboard() {
     <AppShell title="Cashier Dashboard" subtitle={`${user.store} · ${user.storeName}`}>
       <div className="space-y-6">
         {/* Workspace hero — billing always opens deliberately, not automatically */}
-        <div className="rounded-3xl bg-emerald-700 text-white p-5 shadow-sm">
+        <div
+          className="rounded-3xl text-white p-5 shadow-sm"
+          style={{ background: ROLE_THEME.CASHIER.header }}
+        >
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
-              <div className="text-xs text-emerald-100 font-bold">Cashier Workspace</div>
+              <div className="text-xs text-white/80 font-bold">Cashier Workspace</div>
               <h2 className="text-xl font-black">Ready for Billing</h2>
-              <p className="text-sm text-emerald-50 mt-1">
+              <p className="text-sm text-white/90 mt-1">
                 {session?.status === "OPEN"
                   ? "Your shift is open — open the full billing screen when you're ready to work at the counter."
                   : "Start your shift before opening the billing screen."}
@@ -95,7 +99,8 @@ export default function CashierDashboard() {
               {!sessionLoading && (!session || session.status !== "OPEN") && (
                 <button
                   onClick={() => setShowStartShift(true)}
-                  className="rounded-2xl bg-white text-emerald-700 px-5 py-3 text-sm font-black hover:bg-emerald-50 inline-flex items-center justify-center gap-2"
+                  className="rounded-2xl bg-white px-5 py-3 text-sm font-black hover:bg-white/90 inline-flex items-center justify-center gap-2"
+                  style={{ color: ROLE_THEME.CASHIER.primary }}
                 >
                   <PlayCircle className="h-4 w-4" />
                   Start Shift
@@ -105,7 +110,8 @@ export default function CashierDashboard() {
               {session?.status === "OPEN" && (
                 <button
                   onClick={() => setShowCloseShift(true)}
-                  className="rounded-2xl bg-emerald-800 text-white px-5 py-3 text-sm font-black hover:bg-emerald-900 inline-flex items-center justify-center gap-2"
+                  className="rounded-2xl text-white px-5 py-3 text-sm font-black hover:opacity-90 inline-flex items-center justify-center gap-2"
+                  style={{ background: ROLE_THEME.CASHIER.secondary }}
                 >
                   <StopCircle className="h-4 w-4" />
                   Close Shift
@@ -115,7 +121,8 @@ export default function CashierDashboard() {
               <button
                 onClick={() => navigate("/cashier/billing")}
                 disabled={!session || session.status !== "OPEN"}
-                className="rounded-2xl bg-white text-emerald-700 px-5 py-3 text-sm font-black hover:bg-emerald-50 inline-flex items-center justify-center gap-2 disabled:opacity-50"
+                className="rounded-2xl bg-white px-5 py-3 text-sm font-black hover:bg-white/90 inline-flex items-center justify-center gap-2 disabled:opacity-50"
+                style={{ color: ROLE_THEME.CASHIER.primary }}
               >
                 <Maximize2 className="h-4 w-4" />
                 Open Full Billing Screen
@@ -130,13 +137,13 @@ export default function CashierDashboard() {
         {data && (
           <>
             <div className="grid md:grid-cols-4 gap-4">
-              <Card tone="green" icon={<ShoppingCart className="h-4.5 w-4.5" />} label="My Store Orders" value={cards.totalOrders} />
-              <Card tone="green" icon={<ReceiptText className="h-4.5 w-4.5" />} label="Invoices" value={cards.totalInvoices} />
-              <Card tone="emerald" icon={<IndianRupee className="h-4.5 w-4.5" />} label="Sales" value={`₹${cards.totalSales || 0}`} />
-              <Card tone="default" icon={<Package className="h-4.5 w-4.5" />} label="Products Available" value={cards.inventoryRows} />
-              <Card tone="amber" icon={<AlertTriangle className="h-4.5 w-4.5" />} label="Low Stock" value={cards.lowStock} />
-              <Card tone="emerald" icon={<IndianRupee className="h-4.5 w-4.5" />} label="Paid" value={`₹${cards.totalPaid || 0}`} />
-              <Card tone="amber" icon={<IndianRupee className="h-4.5 w-4.5" />} label="Due" value={`₹${cards.totalDue || 0}`} />
+              <Card tone="blue" icon={<ShoppingCart className="h-4.5 w-4.5" />} label="My Store Orders" value={cards.totalOrders} />
+              <Card tone="purple" icon={<ReceiptText className="h-4.5 w-4.5" />} label="Invoices" value={cards.totalInvoices} />
+              <Card tone="teal" icon={<IndianRupee className="h-4.5 w-4.5" />} label="Sales" value={`₹${cards.totalSales || 0}`} />
+              <Card tone="purple" icon={<Package className="h-4.5 w-4.5" />} label="Products Available" value={cards.inventoryRows} />
+              <Card tone="orange" icon={<AlertTriangle className="h-4.5 w-4.5" />} label="Low Stock" value={cards.lowStock} />
+              <Card tone="teal" icon={<IndianRupee className="h-4.5 w-4.5" />} label="Paid" value={`₹${cards.totalPaid || 0}`} />
+              <Card tone="orange" icon={<IndianRupee className="h-4.5 w-4.5" />} label="Due" value={`₹${cards.totalDue || 0}`} />
             </div>
 
             <Section title="Recent Invoices">
@@ -174,20 +181,23 @@ export default function CashierDashboard() {
   );
 }
 
-function Card({ icon, label, value, tone = "default" }: any) {
-  const toneClass =
-    tone === "emerald" ? "bg-emerald-500/10 text-emerald-600" :
-    tone === "green" ? "bg-green-500/10 text-green-600" :
-    tone === "amber" ? "bg-amber-500/10 text-amber-600" :
-    "bg-primary/10 text-primary";
+function Card({ icon, label, value, tone = "blue" }: any) {
+  const hex =
+    tone === "teal" ? COLORS.teal :
+    tone === "orange" ? COLORS.orange :
+    tone === "purple" ? COLORS.deepPurple :
+    COLORS.blue;
 
   return (
     <div className="rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-soft)]">
       <div className="flex items-center justify-between">
         <div className="text-muted-foreground text-sm">{label}</div>
-        <div className={`h-9 w-9 rounded-xl grid place-items-center ${toneClass}`}>{icon}</div>
+        <div className="h-9 w-9 rounded-xl grid place-items-center text-white" style={{ background: hex }}>
+          {icon}
+        </div>
       </div>
       <div className="mt-3 text-2xl font-display">{value ?? 0}</div>
+      <div className="mt-3 h-1 rounded-full" style={{ background: hex }} />
     </div>
   );
 }

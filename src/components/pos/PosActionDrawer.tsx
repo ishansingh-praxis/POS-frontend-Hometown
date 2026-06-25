@@ -22,7 +22,7 @@ export default function PosActionDrawer({
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex justify-end" onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()} className={`w-full ${widthClassName} h-full bg-white shadow-2xl flex flex-col`}>
-        <div className="p-4 bg-emerald-700 text-white flex items-center justify-between shrink-0">
+        <div className="p-4 bg-blue-700 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2 text-sm font-black">
             {icon}
             {title}

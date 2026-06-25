@@ -1,19 +1,27 @@
 import { AppShell } from "@/components/AppShell";
 import { useEffect, useState } from "react";
-import { getCategoriesApi, type ApiCategory } from "@/services/categoryService";
+import {
+  getCategoriesApi,
+  generateCategoriesFromInventoryApi,
+  type ApiCategory,
+} from "@/services/categoryService";
+import { useAuth } from "@/lib/auth";
 import { formatINR } from "@/lib/pos-data";
-import { FolderTree, ChevronRight, Search, Loader2 } from "lucide-react";
+import { FolderTree, ChevronRight, Search, Loader2, RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
 
 function Categories() {
+  const { user } = useAuth();
   const [lobs, setLobs] = useState<ApiCategory[]>([]);
   const [active, setActive] = useState<string>("");
   const [children, setChildren] = useState<ApiCategory[]>([]);
   const [q, setQ] = useState("");
   const [loadingLobs, setLoadingLobs] = useState(true);
   const [loadingChildren, setLoadingChildren] = useState(false);
+  const [generating, setGenerating] = useState(false);
 
-  useEffect(() => {
+  const loadLobs = () => {
+    setLoadingLobs(true);
     getCategoriesApi({ level: "LOB", limit: 50 })
       .then((res) => {
         setLobs(res.items);
@@ -21,7 +29,27 @@ function Categories() {
       })
       .catch((err) => toast.error(err.message || "Failed to load categories"))
       .finally(() => setLoadingLobs(false));
+  };
+
+  useEffect(() => {
+    loadLobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const generateFromInventory = async () => {
+    setGenerating(true);
+    try {
+      const result = await generateCategoriesFromInventoryApi();
+      toast.success(
+        `Generated ${result.lobCategories} LOBs and ${result.productCategories} categories from ATP inventory`
+      );
+      loadLobs();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to generate categories from inventory");
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   useEffect(() => {
     if (!active) return;
@@ -36,7 +64,23 @@ function Categories() {
   const subs = children.filter((s) => s.name.toLowerCase().includes(q.toLowerCase()));
 
   return (
-    <AppShell title="Category Management" subtitle="LOB → Merc. Category hierarchy, generated from SAP ATP inventory" allow={["admin", "manager"]}>
+    <AppShell
+      title="Category Management"
+      subtitle="LOB → Merc. Category hierarchy, generated from SAP ATP inventory"
+      allow={["admin", "manager"]}
+      actions={
+        user?.role === "admin" ? (
+          <button
+            onClick={generateFromInventory}
+            disabled={generating}
+            className="text-xs px-3 py-2 rounded-xl border border-border hover:bg-muted inline-flex items-center gap-1.5 font-bold disabled:opacity-50"
+          >
+            <RefreshCcw className={`h-3.5 w-3.5 ${generating ? "animate-spin" : ""}`} />
+            {generating ? "Generating..." : "Generate from ATP Inventory"}
+          </button>
+        ) : undefined
+      }
+    >
       <div className="grid lg:grid-cols-[320px_1fr] gap-6">
         <aside className="rounded-lg border border-border bg-card">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
@@ -59,7 +103,9 @@ function Categories() {
               ))}
               {lobs.length === 0 && (
                 <li className="px-3 py-6 text-center text-sm text-muted-foreground">
-                  No LOBs yet — run the ATP import to generate categories.
+                  {user?.role === "admin"
+                    ? 'No LOBs yet — click "Generate from ATP Inventory" above.'
+                    : "No LOBs yet — ask an admin to generate categories from ATP inventory."}
                 </li>
               )}
             </ul>

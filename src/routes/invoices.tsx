@@ -208,7 +208,7 @@ const invoiceTypes: InvoiceTypeFilter[] = [
 ];
 
 const getStatusStyle = (status?: string) => {
-  if (status === "ISSUED") return "bg-emerald-100 text-emerald-700";
+  if (status === "ISSUED") return "bg-teal-100 text-teal-700";
   if (status === "CANCELLED") return "bg-red-100 text-red-700";
   if (status === "REFUNDED") return "bg-blue-100 text-blue-700";
   return "bg-muted text-muted-foreground";
@@ -828,21 +828,25 @@ function Invoices() {
             icon={<ShieldCheck className="h-4 w-4" />}
             label="Issued"
             value={String(summary?.issuedInvoices || 0)}
+            tone="success"
           />
           <SummaryCard
             icon={<Ban className="h-4 w-4" />}
             label="Cancelled"
             value={String(summary?.cancelledInvoices || 0)}
+            tone="risk"
           />
           <SummaryCard
             icon={<IndianRupee className="h-4 w-4" />}
             label="Value"
             value={formatINR(summary?.totalInvoiceValue || 0)}
+            tone="gold"
           />
           <SummaryCard
             icon={<IndianRupee className="h-4 w-4" />}
             label="Due"
             value={formatINR(summary?.totalDue || 0)}
+            tone="warning"
           />
         </section>
 
@@ -889,7 +893,7 @@ function Invoices() {
                 fetchInvoices();
                 fetchSummary();
               }}
-              className="rounded-lg bg-orange-600 text-white text-sm font-semibold hover:bg-orange-700"
+              className="rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90"
             >
               Apply
             </button>
@@ -927,13 +931,13 @@ function Invoices() {
             <div className="flex gap-2">
               <button
                 onClick={fetchInvoiceByInvoiceId}
-                className="flex-1 rounded-lg border border-orange-200 text-orange-700 text-xs font-semibold hover:bg-orange-50"
+                className="flex-1 rounded-lg border border-primary/30 text-primary text-xs font-semibold hover:bg-primary/5"
               >
                 By Invoice
               </button>
               <button
                 onClick={fetchInvoiceByOrderId}
-                className="flex-1 rounded-lg border border-orange-200 text-orange-700 text-xs font-semibold hover:bg-orange-50"
+                className="flex-1 rounded-lg border border-primary/30 text-primary text-xs font-semibold hover:bg-primary/5"
               >
                 By Order
               </button>
@@ -943,7 +947,7 @@ function Invoices() {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={fetchStoreInvoices}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-amber-100 text-amber-800 px-3 py-2 text-xs font-semibold"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-[#F3F5FF] text-[#4B49AC] px-3 py-2 text-xs font-semibold"
             >
               <Store className="h-3.5 w-3.5" />
               Store invoices
@@ -954,7 +958,7 @@ function Invoices() {
                 setQ("Kolkata");
                 setTimeout(fetchInvoices, 0);
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-100 text-blue-800 px-3 py-2 text-xs font-semibold"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-[#F3F5FF] text-[#4B49AC] px-3 py-2 text-xs font-semibold"
             >
               <Search className="h-3.5 w-3.5" />
               Search Kolkata
@@ -965,7 +969,7 @@ function Invoices() {
                 setCustomerPhone("9999999999");
                 setTimeout(fetchInvoices, 0);
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-100 text-emerald-800 px-3 py-2 text-xs font-semibold"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-[#F3F5FF] text-[#4B49AC] px-3 py-2 text-xs font-semibold"
             >
               <Phone className="h-3.5 w-3.5" />
               Customer mobile search
@@ -977,7 +981,7 @@ function Invoices() {
                 setToDate("2026-06-30");
                 setTimeout(fetchInvoices, 0);
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-purple-100 text-purple-800 px-3 py-2 text-xs font-semibold"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-[#F3F5FF] text-[#4B49AC] px-3 py-2 text-xs font-semibold"
             >
               <CalendarDays className="h-3.5 w-3.5" />
               June date filter
@@ -1015,7 +1019,7 @@ function Invoices() {
                   {meta.total ?? filtered.length} records
                 </div>
               </div>
-              {loading && <Loader2 className="h-4 w-4 animate-spin text-orange-600" />}
+              {loading && <Loader2 className="h-4 w-4 animate-spin text-primary" />}
             </div>
 
             <ul className="max-h-[70vh] overflow-y-auto divide-y divide-border">
@@ -1029,8 +1033,8 @@ function Invoices() {
                 <li key={inv._id || inv.invoiceId}>
                   <button
                     onClick={() => setActive(inv)}
-                    className={`w-full text-left px-4 py-3 hover:bg-orange-50/70 ${
-                      active?.invoiceId === inv.invoiceId ? "bg-orange-50" : ""
+                    className={`w-full text-left px-4 py-3 hover:bg-[#F3F5FF] ${
+                      active?.invoiceId === inv.invoiceId ? "bg-[#F3F5FF]" : ""
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -1136,20 +1140,29 @@ function SummaryCard({
   icon,
   label,
   value,
+  tone = "default",
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
+  tone?: "default" | "success" | "risk" | "gold" | "warning";
 }) {
+  const hex =
+    tone === "success" ? "#17A2B8" :
+    tone === "risk" ? "#FE9496" :
+    tone === "gold" ? "#E0B50F" :
+    tone === "warning" ? "#F29F67" :
+    "#4B49AC";
+
   return (
-    <div className="rounded-2xl border border-orange-100 bg-gradient-to-br from-orange-50 to-amber-50 p-4 shadow-sm">
+    <div className="rounded-2xl border border-[#E6EAFE] bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between">
-        <div className="text-xs text-orange-700 font-semibold">{label}</div>
-        <div className="h-8 w-8 rounded-full bg-white text-orange-600 grid place-items-center">
+        <div className="text-xs text-slate-500 font-semibold">{label}</div>
+        <div className="h-8 w-8 rounded-full grid place-items-center text-white" style={{ background: hex }}>
           {icon}
         </div>
       </div>
-      <div className="mt-2 text-xl font-bold text-orange-950">{value}</div>
+      <div className="mt-2 text-xl font-bold text-slate-900">{value}</div>
     </div>
   );
 }

@@ -127,11 +127,11 @@ export default function ReturnCreditNoteDrawer({ storeCode, onClose }: { storeCo
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && fetchInvoice()}
               placeholder="Old invoice / order ID / mobile number"
-              className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-bold outline-none focus:ring-2 focus:ring-emerald-200"
+              className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-bold outline-none focus:ring-2 focus:ring-rose-200"
             />
           </div>
           <button onClick={fetchInvoice} disabled={loading}
-            className="rounded-xl bg-emerald-600 text-white px-4 py-2 text-sm font-bold hover:bg-emerald-700 disabled:opacity-50 inline-flex items-center gap-2">
+            className="rounded-xl bg-rose-600 text-white px-4 py-2 text-sm font-bold hover:bg-rose-700 disabled:opacity-50 inline-flex items-center gap-2">
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
             Fetch
           </button>
@@ -166,9 +166,9 @@ export default function ReturnCreditNoteDrawer({ storeCode, onClose }: { storeCo
           <input value={returnReason} onChange={(e) => setReturnReason(e.target.value)} placeholder="Return reason"
             className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm" />
 
-          <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-3 flex items-center justify-between">
-            <span className="text-sm font-bold text-emerald-800">Credit note value</span>
-            <span className="text-lg font-black text-emerald-700">{formatINR(returnAmount)}</span>
+          <div className="rounded-2xl bg-rose-50 border border-rose-200 p-3 flex items-center justify-between">
+            <span className="text-sm font-bold text-rose-800">Credit note value</span>
+            <span className="text-lg font-black text-rose-700">{formatINR(returnAmount)}</span>
           </div>
 
           <div className="flex gap-3">
@@ -176,7 +176,7 @@ export default function ReturnCreditNoteDrawer({ storeCode, onClose }: { storeCo
               Back
             </button>
             <button onClick={confirmReturn} disabled={submitting || returnAmount <= 0}
-              className="flex-1 rounded-2xl bg-emerald-600 text-white py-3 font-black text-sm hover:bg-emerald-700 disabled:opacity-50">
+              className="flex-1 rounded-2xl bg-rose-600 text-white py-3 font-black text-sm hover:bg-rose-700 disabled:opacity-50">
               {submitting ? "Processing…" : "Confirm Return & Issue Credit Note"}
             </button>
           </div>
@@ -184,23 +184,23 @@ export default function ReturnCreditNoteDrawer({ storeCode, onClose }: { storeCo
       )}
 
       {result && order && (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 space-y-3">
-          <div className="text-sm font-bold text-emerald-800">Return {result.returnId} confirmed</div>
-          <div className="text-sm text-emerald-700">Credit note <b>{result.creditNoteId}</b> issued for {formatINR(returnAmount)}.</div>
-          <div className="text-[11px] text-emerald-700/70 inline-flex items-center gap-1">
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 space-y-3">
+          <div className="text-sm font-bold text-rose-800">Return {result.returnId} confirmed</div>
+          <div className="text-sm text-rose-700">Credit note <b>{result.creditNoteId}</b> issued for {formatINR(returnAmount)}.</div>
+          <div className="text-[11px] text-rose-700/70 inline-flex items-center gap-1">
             <AlertCircle className="h-3.5 w-3.5" /> Tell the customer this can be redeemed via Credit Note tender on a future bill.
           </div>
           <div className="grid grid-cols-2 gap-2 pt-1">
             <button onClick={() => printCopy("CUSTOMER COPY", result.returnId, result.creditNoteId, lines, returnAmount, order.customerName || "", order.customerPhone || "")}
-              className="rounded-xl bg-white border border-emerald-300 text-emerald-700 py-2 text-xs font-black inline-flex items-center justify-center gap-1.5">
+              className="rounded-xl bg-white border border-rose-300 text-rose-700 py-2 text-xs font-black inline-flex items-center justify-center gap-1.5">
               <Printer className="h-3.5 w-3.5" /> Customer Copy
             </button>
             <button onClick={() => printCopy("MERCHANT COPY", result.returnId, result.creditNoteId, lines, returnAmount, order.customerName || "", order.customerPhone || "")}
-              className="rounded-xl bg-white border border-emerald-300 text-emerald-700 py-2 text-xs font-black inline-flex items-center justify-center gap-1.5">
+              className="rounded-xl bg-white border border-rose-300 text-rose-700 py-2 text-xs font-black inline-flex items-center justify-center gap-1.5">
               <Printer className="h-3.5 w-3.5" /> Merchant Copy
             </button>
           </div>
-          <button onClick={onClose} className="w-full rounded-xl bg-emerald-700 text-white py-2.5 text-sm font-black">Done</button>
+          <button onClick={onClose} className="w-full rounded-xl bg-rose-700 text-white py-2.5 text-sm font-black">Done</button>
         </div>
       )}
     </PosActionDrawer>

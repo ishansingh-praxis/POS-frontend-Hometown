@@ -44,7 +44,7 @@ export default function SearchBillDrawer({ storeCode, onClose }: { storeCode: st
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && runSearch()}
           placeholder="Mobile number / invoice / order ID"
-          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-bold outline-none focus:ring-2 focus:ring-emerald-200"
+          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-200"
         />
       </div>
 
@@ -58,7 +58,7 @@ export default function SearchBillDrawer({ storeCode, onClose }: { storeCode: st
       <button
         onClick={runSearch}
         disabled={loading}
-        className="w-full rounded-xl bg-emerald-600 text-white py-2.5 font-black text-sm hover:bg-emerald-700 disabled:opacity-50 inline-flex items-center justify-center gap-2"
+        className="w-full rounded-xl bg-blue-600 text-white py-2.5 font-black text-sm hover:bg-blue-700 disabled:opacity-50 inline-flex items-center justify-center gap-2"
       >
         {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
         Search
@@ -73,7 +73,7 @@ export default function SearchBillDrawer({ storeCode, onClose }: { storeCode: st
             </div>
             <div className="mt-1 flex items-center justify-between text-[11px] text-slate-500">
               <span>{b.customerName || "Walk-in"} · {b.customerPhone}</span>
-              <span className={b.paymentStatus === "PAID" ? "text-emerald-600 font-bold" : "text-amber-700 font-bold"}>
+              <span className={b.paymentStatus === "PAID" ? "text-blue-600 font-bold" : "text-amber-700 font-bold"}>
                 {b.paymentStatus}
               </span>
             </div>

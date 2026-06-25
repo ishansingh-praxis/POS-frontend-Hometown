@@ -106,7 +106,7 @@ export default function HeldBillsDrawer({
               <button
                 onClick={() => recall(b)}
                 disabled={busyId === b.holdId}
-                className="flex-1 rounded-lg bg-emerald-600 text-white py-1.5 text-xs font-black hover:bg-emerald-700 disabled:opacity-50 inline-flex items-center justify-center gap-1"
+                className="flex-1 rounded-lg bg-blue-600 text-white py-1.5 text-xs font-black hover:bg-blue-700 disabled:opacity-50 inline-flex items-center justify-center gap-1"
               >
                 {busyId === b.holdId ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />

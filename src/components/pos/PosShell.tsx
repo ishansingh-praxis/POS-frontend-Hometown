@@ -31,10 +31,10 @@ export default function PosShell({
   };
 
   return (
-    <div className="h-screen overflow-hidden bg-emerald-50 text-slate-800">
-      <header className="h-14 bg-emerald-700 text-white px-3 flex items-center justify-between shadow-sm">
+    <div className="h-screen overflow-hidden bg-[#F6F8FF] text-slate-800">
+      <header className="h-14 text-white px-3 flex items-center justify-between shadow-sm" style={{ background: "linear-gradient(135deg, #007BFF 0%, #4B49AC 100%)" }}>
         <div className="flex items-center gap-3 min-w-0">
-          <div className="h-9 w-9 rounded-xl bg-white text-emerald-700 grid place-items-center font-black text-sm shrink-0">
+          <div className="h-9 w-9 rounded-xl bg-white text-[#4B49AC] grid place-items-center font-black text-sm shrink-0">
             HT
           </div>
 
@@ -44,7 +44,7 @@ export default function PosShell({
           </div>
 
           <div className="hidden lg:flex items-center gap-2 rounded-xl bg-white/10 px-3 py-1.5 max-w-[260px]">
-            <Store className="h-3.5 w-3.5 text-emerald-100 shrink-0" />
+            <Store className="h-3.5 w-3.5 text-white/80 shrink-0" />
             <div className="min-w-0">
               <div className="text-[10px] text-white/60">Store</div>
               <div className="text-[11px] font-bold truncate">
@@ -54,7 +54,7 @@ export default function PosShell({
           </div>
 
           <div className="hidden xl:flex items-center gap-2 rounded-xl bg-white/10 px-3 py-1.5 max-w-[220px]">
-            <UserRound className="h-3.5 w-3.5 text-emerald-100 shrink-0" />
+            <UserRound className="h-3.5 w-3.5 text-white/80 shrink-0" />
             <div className="min-w-0">
               <div className="text-[10px] text-white/60">Cashier</div>
               <div className="text-[11px] font-bold truncate">{user?.name}</div>
@@ -69,7 +69,7 @@ export default function PosShell({
 
           <button
             onClick={isFullscreen ? exitFullscreen : enterFullscreen}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-white text-emerald-700 px-3 py-2 text-xs font-black hover:bg-emerald-50"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-white text-[#4B49AC] px-3 py-2 text-xs font-black hover:bg-white/90"
           >
             {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
             <span className="hidden sm:inline">{isFullscreen ? "Reduce" : "Expand"}</span>
@@ -77,21 +77,21 @@ export default function PosShell({
 
           <button
             onClick={goDashboard}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-white text-emerald-700 px-3 py-2 text-xs font-black hover:bg-emerald-50"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-white text-[#4B49AC] px-3 py-2 text-xs font-black hover:bg-white/90"
           >
             <LayoutDashboard className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Dashboard</span>
           </button>
 
           <div className="hidden md:flex items-center gap-1.5 rounded-xl bg-white/10 px-3 py-2 text-xs">
-            <Wifi className="h-3.5 w-3.5 text-emerald-100" />
+            <Wifi className="h-3.5 w-3.5 text-white/80" />
             Online
           </div>
 
           <button
             onClick={handleLogout}
             title="Logout"
-            className="hidden md:inline-flex items-center gap-1.5 rounded-xl bg-emerald-800 px-3 py-2 text-xs font-bold hover:bg-emerald-900"
+            className="hidden md:inline-flex items-center gap-1.5 rounded-xl bg-[#4B49AC] px-3 py-2 text-xs font-bold hover:bg-[#3d3b8f]"
           >
             <LogOut className="h-3.5 w-3.5" />
           </button>
@@ -108,9 +108,9 @@ function SessionBadge({ status }: { status: string }) {
 
   const cls =
     s === "OPEN"
-      ? "bg-emerald-100 text-emerald-800"
+      ? "bg-[#0DCAF0]/15 text-[#0996A8]"
       : s === "AUTO_VERIFIED" || s === "RESOLVED"
-      ? "bg-green-100 text-green-800"
+      ? "bg-teal-100 text-teal-800"
       : s === "EXCEPTION_FLAGGED"
       ? "bg-rose-100 text-rose-800"
       : "bg-slate-100 text-slate-700";

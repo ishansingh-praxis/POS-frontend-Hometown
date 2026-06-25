@@ -247,12 +247,12 @@ type PaymentLine = {
 // Checkout is never blocked; sessions are flagged automatically for manager review instead.
 const HIGH_DISCOUNT_HINT_THRESHOLD = 10;
 
-// ---- POS color system: green/emerald/mint family only — differentiate by shade, not hue ----
+// ---- POS payment method colors: Cash=Blue, UPI=Aqua, Card=Indigo, Split=Teal (system semantic palette) ----
 const PAYMENT_METHOD_STYLE: Record<PaymentMethod, { icon: any; active: string; idle: string; key: string }> = {
-  CASH: { icon: Banknote, active: "bg-emerald-600 text-white border-emerald-600", idle: "bg-white text-emerald-700 border-emerald-200", key: "F6" },
-  UPI: { icon: QrCode, active: "bg-teal-600 text-white border-teal-600", idle: "bg-white text-teal-700 border-teal-200", key: "F7" },
-  CARD: { icon: CreditCard, active: "bg-green-700 text-white border-green-700", idle: "bg-white text-green-700 border-green-200", key: "F8" },
-  SPLIT: { icon: Split, active: "bg-lime-600 text-white border-lime-600", idle: "bg-white text-lime-700 border-lime-200", key: "F9" },
+  CASH: { icon: Banknote, active: "bg-[#007BFF] text-white border-[#007BFF]", idle: "bg-white text-[#007BFF] border-[#007BFF]/30", key: "F6" },
+  UPI: { icon: QrCode, active: "bg-[#00CCCC] text-white border-[#00CCCC]", idle: "bg-white text-[#00CCCC] border-[#00CCCC]/30", key: "F7" },
+  CARD: { icon: CreditCard, active: "bg-[#7978E9] text-white border-[#7978E9]", idle: "bg-white text-[#7978E9] border-[#7978E9]/30", key: "F8" },
+  SPLIT: { icon: Split, active: "bg-[#17A2B8] text-white border-[#17A2B8]", idle: "bg-white text-[#17A2B8] border-[#17A2B8]/30", key: "F9" },
 };
 
 const POS_ALLOWED_ROLES: string[] = ["cashier", "manager"];
@@ -1323,7 +1323,7 @@ function POS() {
     return (
       <PosShell user={user} session={session}>
         <div className="flex items-center justify-center h-full">
-          <div className="animate-spin rounded-full h-10 w-10 border-4 border-emerald-600 border-t-transparent" />
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-600 border-t-transparent" />
         </div>
       </PosShell>
     );
@@ -1335,7 +1335,7 @@ function POS() {
         <div className="h-full grid place-items-center p-6">
           <div className="max-w-md text-center text-red-700 border border-red-200 rounded-3xl bg-red-50 p-6">
             <p>{error}</p>
-            <button onClick={fetchData} className="mt-4 text-sm px-4 py-2 rounded-xl bg-emerald-600 text-white font-black hover:bg-emerald-700">Retry</button>
+            <button onClick={fetchData} className="mt-4 text-sm px-4 py-2 rounded-xl bg-blue-600 text-white font-black hover:bg-blue-700">Retry</button>
           </div>
         </div>
       </PosShell>
@@ -1347,7 +1347,7 @@ function POS() {
     return (
       <PosShell user={user} session={session}>
         <div className="flex items-center justify-center h-full">
-          <div className="animate-spin rounded-full h-10 w-10 border-4 border-emerald-600 border-t-transparent" />
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-600 border-t-transparent" />
         </div>
       </PosShell>
     );
@@ -1374,7 +1374,7 @@ function POS() {
       user={user}
       session={session}
       actions={
-        <button onClick={() => setShowCloseShift(true)} className="hidden md:inline-flex items-center gap-1.5 rounded-xl bg-white text-emerald-700 px-3 py-2 text-xs font-black hover:bg-emerald-50">
+        <button onClick={() => setShowCloseShift(true)} className="hidden md:inline-flex items-center gap-1.5 rounded-xl bg-white text-blue-700 px-3 py-2 text-xs font-black hover:bg-blue-50">
           <StopCircle className="h-4 w-4" /> Close Shift
         </button>
       }
@@ -1386,21 +1386,21 @@ function POS() {
           <div className="p-4 border-b border-slate-200 bg-slate-50 space-y-3">
             <div className="grid sm:grid-cols-2 gap-2">
               <div className="relative">
-                <ScanBarcode className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-emerald-600" />
+                <ScanBarcode className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#00CCCC]" />
                 <input ref={scanRef} onKeyDown={onScan} placeholder="Scan barcode / SKU + Enter  (F2)"
-                  className="w-full h-14 pl-12 pr-4 rounded-2xl border border-emerald-200 bg-emerald-50/50 text-base font-bold text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200" />
+                  className="w-full h-14 pl-12 pr-4 rounded-2xl border border-[#00CCCC]/30 bg-[#00CCCC]/5 text-base font-bold text-slate-900 outline-none focus:border-[#00CCCC] focus:ring-2 focus:ring-[#00CCCC]/30" />
               </div>
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                 <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search products by name / SKU"
-                  className="w-full h-14 pl-12 pr-4 rounded-2xl border border-slate-200 bg-white text-base font-bold text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200" />
+                  className="w-full h-14 pl-12 pr-4 rounded-2xl border border-slate-200 bg-white text-base font-bold text-slate-900 outline-none focus:border-[#00CCCC] focus:ring-2 focus:ring-[#00CCCC]/30" />
               </div>
             </div>
             <div className="flex flex-wrap gap-2 overflow-x-auto">
               {groupOptions.map((g) => (
                 <button key={g} onClick={() => setGroup(g)}
                   className={`px-4 py-2 rounded-full text-xs font-black transition-colors ${
-                    group === g ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-emerald-100"
+                    group === g ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-blue-100"
                   }`}>{g}</button>
               ))}
             </div>
@@ -1415,7 +1415,7 @@ function POS() {
               return (
                 <button key={p.id} onClick={() => add(p)} disabled={out}
                   className={`text-left rounded-2xl border p-3 shadow-sm transition-all relative ${
-                    out ? "bg-red-50 border-red-200 opacity-70" : "bg-white border-slate-200 hover:border-emerald-400 hover:shadow-md"
+                    out ? "bg-red-50 border-red-200 opacity-70" : "bg-white border-slate-200 hover:border-blue-400 hover:shadow-md"
                   }`}>
                   {showDiscount ? (
                     <span className="absolute top-2 right-2 text-[10px] px-1.5 py-0.5 rounded bg-teal-100 text-teal-700 border border-teal-200 inline-flex items-center gap-1 z-10">
@@ -1426,11 +1426,11 @@ function POS() {
                       <Tag className="h-2.5 w-2.5" /> {offer.discountPct}%
                     </span>
                   )}
-                  <div className="aspect-square rounded-xl bg-gradient-to-br from-emerald-50 to-amber-100 overflow-hidden border border-emerald-100">
+                  <div className="aspect-square rounded-xl bg-gradient-to-br from-blue-50 to-amber-100 overflow-hidden border border-blue-100">
                     {p.image ? (
                       <img src={p.image} alt={p.name} className="h-full w-full object-cover" />
                     ) : (
-                      <div className="h-full w-full grid place-items-center text-3xl font-black text-emerald-200">
+                      <div className="h-full w-full grid place-items-center text-3xl font-black text-blue-200">
                         {p.name.charAt(0)}
                       </div>
                     )}
@@ -1448,14 +1448,14 @@ function POS() {
                     </div>
                   </div>
                   <div className="mt-1.5 flex items-center justify-between gap-1">
-                    <span className="text-base font-black text-emerald-600">{formatINR(p.price)}</span>
+                    <span className="text-base font-black text-blue-600">{formatINR(p.price)}</span>
                     <StockBadge status={p.stockStatus} />
                   </div>
                   {showDiscount && discount.requiresManagerApproval && (
-                    <div className="mt-1 text-[9px] text-emerald-600 bg-emerald-50 px-1 rounded inline-block">Approval needed</div>
+                    <div className="mt-1 text-[9px] text-blue-600 bg-blue-50 px-1 rounded inline-block">Approval needed</div>
                   )}
                   <div className={`mt-2 w-full rounded-xl py-2 text-center text-xs font-black ${
-                    out ? "bg-slate-200 text-slate-400" : "bg-emerald-600 text-white"
+                    out ? "bg-slate-200 text-slate-400" : "bg-blue-600 text-white"
                   }`}>
                     {out ? "Out of Stock" : "Add to Bill"}
                   </div>
@@ -1469,8 +1469,8 @@ function POS() {
         </section>
 
         {/* RIGHT ZONE: customer + cart + payment */}
-        <section className="col-span-12 lg:col-span-5 rounded-3xl bg-white border border-emerald-100 shadow-sm flex flex-col overflow-hidden">
-          <div className="p-3 bg-emerald-600 text-white flex items-center justify-between shrink-0">
+        <section className="col-span-12 lg:col-span-5 rounded-3xl bg-white border border-blue-100 shadow-sm flex flex-col overflow-hidden">
+          <div className="p-3 bg-blue-600 text-white flex items-center justify-between shrink-0">
             <div>
               <div className="text-[10px] text-white/70 uppercase tracking-wide">Current Bill</div>
               <div className="text-sm font-black">Customer + Cart</div>
@@ -1482,15 +1482,15 @@ function POS() {
           </div>
 
           <div className="p-4 bg-white text-slate-950 shrink-0">
-            <div className="flex items-center gap-2 text-sm font-black"><UserRound className="h-4 w-4 text-teal-600" /> Customer</div>
+            <div className="flex items-center gap-2 text-sm font-black"><UserRound className="h-4 w-4 text-[#0DCAF0]" /> Customer</div>
             <div className="mt-2 relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input ref={phoneRef} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Mobile number  (F4)"
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-teal-200 bg-teal-50/40 text-sm font-bold outline-none focus:ring-2 focus:ring-teal-300" />
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-[#0DCAF0]/30 bg-[#0DCAF0]/5 text-sm font-bold outline-none focus:ring-2 focus:ring-[#0DCAF0]/30" />
             </div>
             {foundCustomer && (
-              <div className="mt-2 flex items-center justify-between rounded-xl bg-teal-50 px-2.5 py-1.5 text-xs">
-                <span className="font-black text-teal-700">{foundCustomer.customerName || foundCustomer.name}</span>
+              <div className="mt-2 flex items-center justify-between rounded-xl bg-[#0DCAF0]/10 px-2.5 py-1.5 text-xs">
+                <span className="font-black text-[#0996A8]">{foundCustomer.customerName || foundCustomer.name}</span>
                 <span className="text-slate-500">
                   {foundCustomer.invoiceCount || foundCustomer.orderCount || 0} visits ·{" "}
                   {formatINR(foundCustomer.totalHistoricalSalesValue || foundCustomer.totalSpent || foundCustomer.totalSpend || 0)}
@@ -1504,7 +1504,7 @@ function POS() {
             <button
               onClick={() => setScheduleDelivery((s) => !s)}
               className={`mt-3 w-full flex items-center justify-between rounded-xl px-3 py-2 text-xs font-black transition-colors ${
-                scheduleDelivery ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-emerald-100"
+                scheduleDelivery ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-blue-100"
               }`}
             >
               <span className="inline-flex items-center gap-1.5"><Truck className="h-3.5 w-3.5" /> Schedule Delivery</span>
@@ -1559,7 +1559,7 @@ function POS() {
                         <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">Offer</span>
                       )}
                       {l.appliedDiscount?.requiresApproval && (
-                        <span className="text-[9px] text-emerald-600 bg-emerald-50 px-1 rounded">Approval</span>
+                        <span className="text-[9px] text-blue-600 bg-blue-50 px-1 rounded">Approval</span>
                       )}
                     </div>
                   </div>
@@ -1580,7 +1580,7 @@ function POS() {
             {itemDiscTotal > 0 && <Row label="Item discounts" value={`- ${formatINR(itemDiscTotal)}`} muted />}
             <Row label="GST" value={formatINR(gstTotal)} muted />
             {appliedCoupon && (
-              <div className="flex items-center justify-between text-emerald-700 font-bold text-sm">
+              <div className="flex items-center justify-between text-blue-700 font-bold text-sm">
                 <span>Coupon Discount</span>
                 <span>− {formatINR(appliedCoupon.discountAmount)}</span>
               </div>
@@ -1599,7 +1599,7 @@ function POS() {
             )}
 
             {/* Grand total must always read at a glance — compact, not oversized */}
-            <div className="rounded-2xl bg-emerald-700 text-white p-3">
+            <div className="rounded-2xl bg-blue-700 text-white p-3">
               <div className="flex justify-between items-end">
                 <div>
                   <div className="text-[11px] text-white/70">Grand Total</div>
@@ -1618,7 +1618,7 @@ function POS() {
                 setShowBillingForm(true);
               }}
               disabled={!cart.length}
-              className="w-full rounded-2xl bg-emerald-600 text-white py-3 font-black text-sm hover:bg-emerald-700 disabled:opacity-50 inline-flex items-center justify-center gap-2"
+              className="w-full rounded-2xl bg-blue-600 text-white py-3 font-black text-sm hover:bg-blue-700 disabled:opacity-50 inline-flex items-center justify-center gap-2"
             >
               <Receipt className="h-4 w-4" /> Open Billing Form
             </button>
@@ -1630,9 +1630,9 @@ function POS() {
       </div>
 
       {/* FIXED BOTTOM BAR: cart total and the complete-bill action are always visible */}
-      <div className="fixed bottom-0 left-0 right-0 h-20 bg-emerald-700 text-white border-t border-white/10 px-4 flex items-center justify-between z-40">
+      <div className="fixed bottom-0 left-0 right-0 h-20 bg-blue-700 text-white border-t border-white/10 px-4 flex items-center justify-between z-40">
         <div className="flex gap-2">
-          <button onClick={reset} className="rounded-2xl bg-emerald-800 px-4 py-2.5 text-xs font-black hover:bg-emerald-900 inline-flex items-center gap-1.5">
+          <button onClick={reset} className="rounded-2xl bg-blue-800 px-4 py-2.5 text-xs font-black hover:bg-blue-900 inline-flex items-center gap-1.5">
             <Ban className="h-3.5 w-3.5" /> Clear
           </button>
 
@@ -1640,7 +1640,7 @@ function POS() {
             onClick={holdCurrentBill}
             disabled={holdingBill || !cart.length}
             title="Hold this bill and free up the counter for the next customer"
-            className="rounded-2xl bg-emerald-800 px-4 py-2.5 text-xs font-black hover:bg-emerald-900 disabled:opacity-50 inline-flex items-center gap-1.5"
+            className="rounded-2xl bg-blue-800 px-4 py-2.5 text-xs font-black hover:bg-blue-900 disabled:opacity-50 inline-flex items-center gap-1.5"
           >
             {holdingBill ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <PauseCircle className="h-3.5 w-3.5" />}
             Hold
@@ -1657,7 +1657,7 @@ function POS() {
             onClick={() => { applyFullPayment(); checkout(); }}
             disabled={checkingOut || !cart.length}
             title="Skip the billing form and collect full payment immediately"
-            className="rounded-2xl bg-emerald-800 text-white hover:bg-emerald-900 px-4 py-3 font-black text-xs disabled:opacity-50 inline-flex items-center gap-1.5"
+            className="rounded-2xl bg-blue-800 text-white hover:bg-blue-900 px-4 py-3 font-black text-xs disabled:opacity-50 inline-flex items-center gap-1.5"
           >
             Full Pay Checkout
           </button>
@@ -1668,7 +1668,7 @@ function POS() {
               setShowBillingForm(true);
             }}
             disabled={checkingOut || !cart.length}
-            className="rounded-2xl bg-white text-emerald-700 hover:bg-emerald-50 px-6 py-3 font-black text-sm disabled:opacity-60 inline-flex items-center gap-2">
+            className="rounded-2xl bg-white text-blue-700 hover:bg-blue-50 px-6 py-3 font-black text-sm disabled:opacity-60 inline-flex items-center gap-2">
             <Receipt className="h-5 w-5" />
             Billing Form  (F10)
           </button>
@@ -1777,7 +1777,7 @@ function Row({ label, value, input, muted }: { label: string; value?: string; in
 function StockBadge({ status }: { status: StockStatus }) {
   const cls =
     status === "IN_STOCK"
-      ? "bg-emerald-100 text-emerald-700"
+      ? "bg-blue-100 text-blue-700"
       : status === "LIMITED_STOCK"
       ? "bg-amber-100 text-amber-700"
       : status === "LOW_STOCK"
@@ -1850,7 +1850,7 @@ function BillingFormDrawer({
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex justify-end" onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()} className="w-full max-w-[560px] h-full bg-white shadow-2xl flex flex-col">
-        <div className="p-4 bg-emerald-700 text-white flex items-center justify-between shrink-0">
+        <div className="p-4 bg-blue-700 text-white flex items-center justify-between shrink-0">
           <div className="text-sm font-black">Billing Form</div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/10"><X className="h-5 w-5" /></button>
         </div>
@@ -1862,13 +1862,13 @@ function BillingFormDrawer({
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input ref={phoneRef} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Mobile number (required)"
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-teal-200 bg-teal-50/40 text-sm font-bold outline-none focus:ring-2 focus:ring-teal-300" />
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-[#0DCAF0]/30 bg-[#0DCAF0]/5 text-sm font-bold outline-none focus:ring-2 focus:ring-[#0DCAF0]/30" />
             </div>
 
             {foundCustomer && (
-              <div className="rounded-xl bg-teal-50 border border-teal-100 p-2.5 space-y-1.5 text-xs">
+              <div className="rounded-xl bg-[#0DCAF0]/10 border border-[#0DCAF0]/20 p-2.5 space-y-1.5 text-xs">
                 <div className="flex items-center justify-between">
-                  <span className="font-black text-teal-700">{foundCustomer.customerName || foundCustomer.name}</span>
+                  <span className="font-black text-[#0996A8]">{foundCustomer.customerName || foundCustomer.name}</span>
                   <span className="text-slate-500">
                     {foundCustomer.visits || foundCustomer.invoiceCount || foundCustomer.orderCount || 0} visits ·{" "}
                     {formatINR(foundCustomer.totalHistoricalSalesValue || foundCustomer.totalSpent || foundCustomer.totalSpend || 0)}
@@ -1881,7 +1881,7 @@ function BillingFormDrawer({
                   {foundCustomer.lastVisit && <div>Last visit: {new Date(foundCustomer.lastVisit).toLocaleDateString("en-IN")}</div>}
                   {!!foundCustomer.totalDue && <div className="text-amber-700 font-bold">Outstanding due: {formatINR(foundCustomer.totalDue)}</div>}
                 </div>
-                <div className="text-[10px] text-teal-700/60 pt-0.5">Wallet / credit note balance / reward points — coming soon.</div>
+                <div className="text-[10px] text-[#0996A8]/70 pt-0.5">Wallet / credit note balance / reward points — coming soon.</div>
               </div>
             )}
 
@@ -1929,32 +1929,32 @@ function BillingFormDrawer({
               <div className="flex items-center gap-1">
                 <input type="number" min={0} value={delivery} onChange={(e) => setDelivery(Number(e.target.value) || 0)}
                   className="w-20 px-2 py-1 rounded border border-slate-200 text-right text-xs" />
-                {freeDelivery && <span className="text-[10px] text-emerald-600">(Free)</span>}
+                {freeDelivery && <span className="text-[10px] text-blue-600">(Free)</span>}
               </div>
             } />
             <Row label="Installation charge" input={
               <div className="flex items-center gap-1">
                 <input type="number" min={0} value={installation} onChange={(e) => setInstallation(Number(e.target.value) || 0)}
                   className="w-20 px-2 py-1 rounded border border-slate-200 text-right text-xs" />
-                {freeInstallation && <span className="text-[10px] text-emerald-600">(Free)</span>}
+                {freeInstallation && <span className="text-[10px] text-blue-600">(Free)</span>}
               </div>
             } />
           </div>
 
           {/* Coupon / Offer Code */}
-          <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-amber-50 p-4 space-y-3">
+          <div className="rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-amber-50 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="h-9 w-9 rounded-xl bg-emerald-600 text-white grid place-items-center">
+                <div className="h-9 w-9 rounded-xl bg-blue-600 text-white grid place-items-center">
                   <TicketPercent className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-emerald-950">Coupon / Offer Code</div>
-                  <div className="text-xs text-emerald-800/70">Validate unique single-use coupon before checkout</div>
+                  <div className="text-sm font-bold text-blue-950">Coupon / Offer Code</div>
+                  <div className="text-xs text-blue-800/70">Validate unique single-use coupon before checkout</div>
                 </div>
               </div>
               {appliedCoupon && (
-                <button onClick={removeCoupon} className="text-xs px-2 py-1 rounded-lg bg-white border border-emerald-200 text-emerald-700 hover:bg-emerald-100 inline-flex items-center gap-1">
+                <button onClick={removeCoupon} className="text-xs px-2 py-1 rounded-lg bg-white border border-blue-200 text-blue-700 hover:bg-blue-100 inline-flex items-center gap-1">
                   <X className="h-3 w-3" /> Remove
                 </button>
               )}
@@ -1966,24 +1966,24 @@ function BillingFormDrawer({
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   placeholder="Enter coupon e.g. HTHDFCXI9A18"
-                  className="flex-1 rounded-xl border border-emerald-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-200"
+                  className="flex-1 rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-200"
                 />
                 <button onClick={validateCoupon} disabled={couponLoading}
-                  className="rounded-xl bg-emerald-600 text-white px-4 py-2 text-sm font-bold hover:bg-emerald-700 disabled:opacity-60 inline-flex items-center gap-2">
+                  className="rounded-xl bg-blue-600 text-white px-4 py-2 text-sm font-bold hover:bg-blue-700 disabled:opacity-60 inline-flex items-center gap-2">
                   {couponLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <BadgeCheck className="h-4 w-4" />}
                   Apply
                 </button>
               </div>
             ) : (
-              <div className="rounded-xl bg-white border border-emerald-200 p-3">
+              <div className="rounded-xl bg-white border border-blue-200 p-3">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <div className="text-sm font-bold text-emerald-700">Coupon Applied: {appliedCoupon.offerCode}</div>
+                    <div className="text-sm font-bold text-blue-700">Coupon Applied: {appliedCoupon.offerCode}</div>
                     <div className="text-xs text-muted-foreground">{appliedCoupon.campaignName}</div>
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-muted-foreground">Discount</div>
-                    <div className="text-lg font-black text-emerald-700">− {formatINR(appliedCoupon.discountAmount)}</div>
+                    <div className="text-lg font-black text-blue-700">− {formatINR(appliedCoupon.discountAmount)}</div>
                   </div>
                 </div>
                 <div className="mt-2 grid grid-cols-2 gap-2 text-[11px] text-muted-foreground">
@@ -2009,7 +2009,7 @@ function BillingFormDrawer({
               <button
                 onClick={() => applyFullPayment()}
                 className={`rounded-xl py-2.5 text-sm font-black border ${
-                  paymentPlan === "FULL" ? "bg-emerald-600 text-white border-emerald-600" : "bg-white text-emerald-700 border-emerald-200"
+                  paymentPlan === "FULL" ? "bg-blue-600 text-white border-blue-600" : "bg-white text-blue-700 border-blue-200"
                 }`}
               >
                 Full Payment
@@ -2078,10 +2078,10 @@ function BillingFormDrawer({
             </div>
 
             {paymentMethod === "UPI" && (
-              <div className="rounded-xl bg-white border border-teal-200 p-3 text-center">
+              <div className="rounded-xl bg-white border border-[#00CCCC]/30 p-3 text-center">
                 <button
                   onClick={() => generateUpiQr(Number(paid || total))}
-                  className="mb-2 text-xs px-3 py-1.5 rounded-lg bg-teal-600 text-white font-black"
+                  className="mb-2 text-xs px-3 py-1.5 rounded-lg bg-[#00CCCC] text-white font-black"
                 >
                   Generate UPI QR
                 </button>
@@ -2116,10 +2116,10 @@ function BillingFormDrawer({
                     <span className="w-12 text-xs font-black">₹{note}</span>
                     <input type="number" min={0} value={cashNotes[note]}
                       onChange={(e) => setCashNotes({ ...cashNotes, [note]: Number(e.target.value || 0) })}
-                      className="w-full px-2 py-1 rounded border border-emerald-200 text-xs" />
+                      className="w-full px-2 py-1 rounded border border-blue-200 text-xs" />
                   </div>
                 ))}
-                <div className="col-span-2 text-right text-xs font-black text-emerald-700">
+                <div className="col-span-2 text-right text-xs font-black text-blue-700">
                   Cash total: {formatINR(cashTotal)}
                 </div>
               </div>
@@ -2136,7 +2136,7 @@ function BillingFormDrawer({
                         next[index] = { ...next[index], method: e.target.value as "UPI" | "CARD" | "CASH" };
                         setPaymentLines(next);
                       }}
-                      className="px-2 py-2 rounded-lg border border-emerald-200 text-xs"
+                      className="px-2 py-2 rounded-lg border border-blue-200 text-xs"
                     >
                       <option value="CASH">Cash</option>
                       <option value="UPI">UPI</option>
@@ -2150,13 +2150,13 @@ function BillingFormDrawer({
                         next[index] = { ...next[index], amount: Number(e.target.value || 0) };
                         setPaymentLines(next);
                       }}
-                      className="px-2 py-2 rounded-lg border border-emerald-200 text-xs"
+                      className="px-2 py-2 rounded-lg border border-blue-200 text-xs"
                     />
                   </div>
                 ))}
                 <button
                   onClick={() => setPaymentLines([...paymentLines, { method: "UPI", amount: 0 }])}
-                  className="text-xs px-3 py-1 rounded-md bg-white border border-emerald-200 text-emerald-700"
+                  className="text-xs px-3 py-1 rounded-md bg-white border border-blue-200 text-blue-700"
                 >
                   Add another payment
                 </button>
@@ -2186,7 +2186,7 @@ function BillingFormDrawer({
           <button
             onClick={onCompleteBill}
             disabled={checkingOut}
-            className="flex-1 rounded-2xl bg-emerald-600 text-white py-3 font-black text-sm hover:bg-emerald-700 disabled:opacity-60 inline-flex items-center justify-center gap-2"
+            className="flex-1 rounded-2xl bg-blue-600 text-white py-3 font-black text-sm hover:bg-blue-700 disabled:opacity-60 inline-flex items-center justify-center gap-2"
           >
             {checkingOut ? <Loader2 className="h-5 w-5 animate-spin" /> : <Receipt className="h-5 w-5" />}
             {checkingOut ? "Saving…" : "Complete Bill"}
